@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Тренажёр: Налоговая проверка | Мессенджер</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef2f7 0%, #e0e7ef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            padding: 20px;
+        }
+
+        .messenger {
+            max-width: 750px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 36px;
+            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #FFFFFF;
+            padding: 18px 24px 12px 24px;
+            border-bottom: 1.5px solid rgba(149, 202, 250, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .avatar {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #95CAFA, #7eb5df);
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(149, 202, 250, 0.3);
+        }
+        .chat-info h2 {
+            font-size: 1.28rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: #1a2c3e;
+        }
+        .chat-info h2 span {
+            font-weight: 500;
+            background: #ecf7ff;
+            padding: 2px 8px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+            color: #2c6e9e;
+        }
+        .chat-info p {
+            font-size: 0.8rem;
+            color: #5e7a93;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #2fc96b;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .messages-area {
+            background: #FEFEFE;
+            padding: 22px 20px 12px 20px;
+            min-height: 460px;
+            max-height: 520px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            display: flex;
+            max-width: 85%;
+            animation: fadeSlideUp 0.26s ease-out;
+        }
+        .client-message { align-self: flex-start; }
+        .client-message .bubble {
+            background: #F1F5F9;
+            border-radius: 22px 22px 22px 8px;
+            border: 1px solid #e0ecf5;
+        }
+        .user-message { align-self: flex-end; }
+        .user-message .bubble {
+            background: #95CAFA18;
+            border-radius: 22px 22px 8px 22px;
+            border: 1px solid #95CAFA;
+        }
+        .bubble {
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            font-weight: 440;
+            word-break: break-word;
+            color: #1e2e3c;
+        }
+        .message-meta {
+            font-size: 0.68rem;
+            margin-top: 6px;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: #8da0b2;
+            display: flex;
+            gap: 8px;
+        }
+        .client-message .message-meta { justify-content: flex-start; }
+        .user-message .message-meta { justify-content: flex-end; }
+
+        .options-panel {
+            background: #FFFFFF;
+            border-top: 1px solid rgba(149, 202, 250, 0.6);
+            padding: 20px 20px 16px;
+        }
+        .options-title {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #5e7a93;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .options-title::before { content: "⚡"; font-size: 14px; }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        .option-btn {
+            width: 100%;
+            background: transparent;
+            border: 1.8px solid #95CAFA;
+            border-radius: 26px;
+            padding: 13px 18px;
+            font-family: 'Segoe UI', 'Inter', sans-serif;
+            font-size: 0.93rem;
+            font-weight: 500;
+            text-align: left;
+            color: #1e2f3e;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #FFFFFF;
+            line-height: 1.35;
+        }
+        .option-btn:hover {
+            background: #F4FAFF;
+            border-color: #7bb9e6;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(149, 202, 250, 0.2);
+        }
+        .options-disabled .option-btn {
+            opacity: 0.6;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .analysis-card {
+            margin: 12px 20px 20px 20px;
+            border-radius: 20px;
+            padding: 14px 18px;
+            font-size: 0.88rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .analysis-card.correct {
+            background-color: #e9f7ef;
+            border-left: 6px solid #2c9b5e;
+            color: #155724;
+        }
+        .analysis-card.wrong {
+            background-color: #ffe6e6;
+            border-left: 6px solid #dc3545;
+            color: #9b2c2c;
+        }
+        .feedback-footnote {
+            margin-top: 8px;
+            font-size: 0.72rem;
+            text-align: center;
+            color: #9ab3cc;
+            border-top: 1px dashed #e2edf7;
+            padding-top: 12px;
+        }
+        .reset-button-container {
+            padding: 8px 20px 22px 20px;
+            background: #FFFFFF;
+            border-top: 1px solid #ecf3f9;
+            text-align: center;
+        }
+        .reset-chat {
+            background: #f8fafd;
+            border: 1.2px solid #95CAFA;
+            border-radius: 44px;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: inherit;
+            color: #22668d;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .reset-chat:hover {
+            background: #eef5fc;
+            transform: scale(0.98);
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .messages-area::-webkit-scrollbar { width: 5px; }
+        .messages-area::-webkit-scrollbar-track { background: #ECF3F9; border-radius: 10px; }
+        .messages-area::-webkit-scrollbar-thumb { background: #95CAFA; border-radius: 10px; }
+        @media (max-width: 560px) {
+            .message { max-width: 92%; }
+            .option-btn { padding: 11px 14px; font-size: 0.86rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="messenger" id="messengerApp">
+    <div class="chat-header">
+        <div class="avatar">👔</div>
+        <div class="chat-info">
+            <h2>Михаил Алексеевич <span>клиент</span></h2>
+            <p><span class="online-dot"></span> онлайн</p>
+        </div>
+    </div>
+
+    <div class="messages-area" id="messagesArea"></div>
+
+    <div class="options-panel" id="optionsPanel">
+        <div class="options-title">Ваш ответ</div>
+        <div class="options-grid" id="optionsContainer"></div>
+        <div class="feedback-footnote" id="footnoteMsg">Выберите вариант ответа</div>
+    </div>
+
+    <div id="analysisContainer"></div>
+
+    <div class="reset-button-container">
+        <button class="reset-chat" id="resetChatBtn">⟳ Начать диалог заново</button>
+    </div>
+</div>
+
+<script>
+    // ----- ТРЕНАЖЁР ПО СЦЕНАРИЮ (МИХАИЛ АЛЕКСЕЕВИЧ) -----
+    const messagesContainer = document.getElementById('messagesArea');
+    const optionsContainerDiv = document.getElementById('optionsContainer');
+    const optionsPanel = document.getElementById('optionsPanel');
+    const footnoteEl = document.getElementById('footnoteMsg');
+    const analysisDiv = document.getElementById('analysisContainer');
+
+    let currentState = { locked: false };
+
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function addMessage(text, sender = 'user') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender === 'client' ? 'client-message' : 'user-message'}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.innerText = text;
+        const metaSpan = document.createElement('div');
+        metaSpan.className = 'message-meta';
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (sender === 'client') metaSpan.innerText = `Михаил Алексеевич · ${timeStr}`;
+        else metaSpan.innerText = `Вы · ${timeStr}`;
+        messageDiv.appendChild(bubble);
+        messageDiv.appendChild(metaSpan);
+        messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
+        return messageDiv;
+    }
+
+    function clearOptions() { optionsContainerDiv.innerHTML = ''; }
+    function disableOptions(disabled = true) {
+        if (disabled) optionsPanel.classList.add('options-disabled');
+        else optionsPanel.classList.remove('options-disabled');
+    }
+
+    function showAnalysis(text, type = 'wrong') {
+        analysisDiv.innerHTML = '';
+        const card = document.createElement('div');
+        card.className = `analysis-card ${type === 'correct' ? 'correct' : 'wrong'}`;
+        if (type === 'correct') {
+            card.innerHTML = `<strong>✅ Верное решение</strong><br>${text}`;
+        } else {
+            card.innerHTML = `<strong>⚠️ Разбор ошибки</strong><br>${text}`;
+        }
+        analysisDiv.appendChild(card);
+        scrollToBottom();
+    }
+
+    function clearAnalysis() { analysisDiv.innerHTML = ''; }
+
+    function finishWithAnalysis(analysisText, isCorrect = false) {
+        currentState.locked = true;
+        disableOptions(true);
+        clearOptions();
+        showAnalysis(analysisText, isCorrect ? 'correct' : 'wrong');
+        footnoteEl.innerHTML = 'Диалог завершён. Нажмите «Начать заново», чтобы пройти сценарий ещё раз.';
+    }
+
+    function createButton(text, onClick) {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = text;
+        btn.addEventListener('click', () => {
+            if (currentState.locked) return;
+            onClick();
+        });
+        optionsContainerDiv.appendChild(btn);
+    }
+
+    // --------------------------------------------------------------
+    // СТАРТ
+    function startDialog() {
+        addMessage('Добрый день. Срочно нужно подготовить ответ для налоговой. Проверка уже идет, времени мало. Возьметесь?', 'client');
+        showFirstChoice();
+    }
+
+    // --------------------------------------------------------------
+    // ВЫБОР 1
+    function showFirstChoice() {
+        clearOptions();
+        createButton('Добрый день! Да, возьмусь', () => {
+            addMessage('Добрый день! Да, возьмусь', 'user');
+            startBranchA();
+        });
+        createButton('Добрый день! Сначала направьте документы, посмотрим объем, потом обсудим работу', () => {
+            addMessage('Добрый день! Сначала направьте документы, посмотрим объем, потом обсудим работу', 'user');
+            startBranchB();
+        });
+        footnoteEl.innerHTML = 'Как ответите клиенту?';
+    }
+
+    // --------------------------------------------------------------
+    // ВЕТКА A
+    function startBranchA() {
+        setTimeout(() => {
+            addMessage('Нужно быстро. Все очень срочно', 'client');
+            setTimeout(() => {
+                showChoice2A();
+            }, 600);
+        }, 500);
+    }
+
+    function showChoice2A() {
+        clearOptions();
+        createButton('Хорошо, выполню по расценкам прошлой услуги', () => {
+            addMessage('Хорошо, выполню по расценкам прошлой услуги', 'user');
+            continueA1();
+        });
+        createButton('Сначала пришлите документы, без них не начну', () => {
+            addMessage('Сначала пришлите документы, без них не начну', 'user');
+            continueA2();
+        });
+        footnoteEl.innerHTML = 'Клиент торопит. Ваш ответ?';
+    }
+
+    // A1: согласился по расценкам прошлой услуги → потом выясняется, что объём больше
+    function continueA1() {
+        setTimeout(() => {
+            addMessage('Хорошо, направляю документы', 'client');
+            setTimeout(() => {
+                addMessage('Вы посмотрели документы. Объем работы значительно больше, чем был в прошлый раз. Нужна доплата.', 'user');
+                setTimeout(() => {
+                    addMessage('Нет, вы же согласились выполнить по расценкам прошлой услуги', 'client');
+                    setTimeout(() => {
+                        showChoice3A1();
+                    }, 700);
+                }, 600);
+            }, 600);
+        }, 500);
+    }
+
+    function showChoice3A1() {
+        clearOptions();
+        createButton('Соглашаюсь, сделаю в убыток себе, чтобы не потерять клиента', () => {
+            addMessage('Соглашаюсь, сделаю в убыток себе, чтобы не потерять клиента', 'user');
+            setTimeout(() => {
+                finishWithAnalysis(
+                    'Ошибка: Вы согласились работать в убыток.\n\n' +
+                    'Последствия:\n' +
+                    '• работа выполнена без компенсации переработок\n' +
+                    '• клиент закрепляет модель «можно нагружать без доплат»\n' +
+                    '• снижение ценности ваших услуг\n' +
+                    '• риск профессионального выгорания и финансовых потерь',
+                    false
+                );
+            }, 500);
+        });
+        createButton('Отказываюсь от работы, теряю клиента', () => {
+            addMessage('Отказываюсь от работы, теряю клиента', 'user');
+            setTimeout(() => {
+                finishWithAnalysis(
+                    'Ошибка: Вы отказались от клиента вместо того, чтобы попробовать договориться.\n\n' +
+                    'Последствия:\n' +
+                    '• потеря клиента и репутационные риски\n' +
+                    '• упущена возможность пересмотра условий\n' +
+                    '• можно было предложить компромисс: частичная доплата или поэтапная работа',
+                    false
+                );
+            }, 500);
+        });
+        footnoteEl.innerHTML = 'Клиент отказывается от доплаты. Ваш ход?';
+    }
+
+    // A2: отказ начинать без документов
+    function continueA2() {
+        setTimeout(() => {
+            addMessage('Документы пришлю позже, но работать нужно уже сейчас', 'client');
+            setTimeout(() => {
+                showChoice4A2();
+            }, 600);
+        }, 500);
+    }
+
+    function showChoice4A2() {
+        clearOptions();
+        createButton('Хорошо, начинаю работу', () => {
+            addMessage('Хорошо, начинаю работу', 'user');
+            setTimeout(() => {
+                addMessage('Оплату согласовали как изначально, без доплат', 'client');
+                setTimeout(() => {
+                    finishWithAnalysis(
+                        'Ошибка: Вы согласились начать работу без ознакомления с документами и без оценки объема.\n\n' +
+                        'Последствия:\n' +
+                        '• вы не знали реальный объём задач\n' +
+                        '• отсутствует возможность обосновать увеличение стоимости\n' +
+                        '• клиент получил работу без доплат, хотя объем мог быть больше\n' +
+                        '• риск переработок и убытков для вас',
+                        false
+                    );
+                }, 600);
+            }, 500);
+        });
+        createButton('Жду документы, без них не работаю', () => {
+            addMessage('Жду документы, без них не работаю', 'user');
+            setTimeout(() => {
+                addMessage('Хорошо, тогда подожду', 'client');
+                setTimeout(() => {
+                    finishWithAnalysis(
+                        'Вы не начали работу без документов, что позволило бы оценить реальный объём задач.\n\n' +
+                        'Это правильно, потому что:\n' +
+                        '• вы защищаете свои трудозатраты\n' +
+                        '• клиент понимает, что без информации работа невозможна\n' +
+                        '• вы избегаете ситуации «сделал, а доплату не согласовали»\n' +
+                        '• формируются профессиональные рамки взаимодействия',
+                        true
+                    );
+                }, 500);
+            }, 500);
+        });
+        footnoteEl.innerHTML = 'Клиент хочет начать без документов. Ваш ответ?';
+    }
+
+    // --------------------------------------------------------------
+    // ВЕТКА B
+    function startBranchB() {
+        setTimeout(() => {
+            addMessage('Хорошо, отправляю документы', 'client');
+            setTimeout(() => {
+                showChoice2B();
+            }, 600);
+        }, 500);
+    }
+
+    function showChoice2B() {
+        clearOptions();
+        createButton('Объем работы больше стандартного. Стоимость и сроки нужно пересмотреть', () => {
+            addMessage('Объем работы больше стандартного. Стоимость и сроки нужно пересмотреть', 'user');
+            continueB1();
+        });
+        createButton('Хорошо, приступаю после получения', () => {
+            addMessage('Хорошо, приступаю после получения', 'user');
+            setTimeout(() => {
+                finishWithAnalysis(
+                    'Ошибка: Вы не провели анализ объёма и не пересмотрели условия, хотя могли это сделать.\n\n' +
+                    'Последствия:\n' +
+                    '• работа может оказаться объёмнее, чем стоило ожидать\n' +
+                    '• стоимость не пересмотрена → риск переработок\n' +
+                    '• клиент не ожидает доплат\n' +
+                    '• упущен момент для корректировки условий',
+                    false
+                );
+            }, 500);
+        });
+        footnoteEl.innerHTML = 'Документы получены. Ваш ответ?';
+    }
+
+    function continueB1() {
+        setTimeout(() => {
+            addMessage('Понимаю, но нам срочно. Давайте работать, оплату обсудим позже', 'client');
+            setTimeout(() => {
+                showChoice3B();
+            }, 600);
+        }, 500);
+    }
+
+    function showChoice3B() {
+        clearOptions();
+        createButton('Хорошо, начинаю без допсоглашения', () => {
+            addMessage('Хорошо, начинаю без допсоглашения', 'user');
+            setTimeout(() => {
+                addMessage('Мы не согласовывали увеличение стоимости. Оплатим как договаривались изначально', 'client');
+                setTimeout(() => {
+                    finishWithAnalysis(
+                        'Ошибка: Вы начали работу без допсоглашения, хотя объём был больше.\n\n' +
+                        'Последствия:\n' +
+                        '• клиент не обязан платить больше устной договорённости\n' +
+                        '• вы не имеете юридического обоснования для повышения оплаты\n' +
+                        '• работа выполнена, а доплата не согласована документально\n' +
+                        '• риск остаться без компенсации переработок',
+                        false
+                    );
+                }, 600);
+            }, 500);
+        });
+        createButton('Без допсоглашения не начну', () => {
+            addMessage('Без допсоглашения не начну', 'user');
+            setTimeout(() => {
+                addMessage('Хорошо, тогда оформим допсоглашение', 'client');
+                setTimeout(() => {
+                    showChoice4B();
+                }, 600);
+            }, 500);
+        });
+        footnoteEl.innerHTML = 'Клиент просит начать без документального согласования. Ваш ответ?';
+    }
+
+    function showChoice4B() {
+        clearOptions();
+        createButton('Оформляю допсоглашение и начинаю работу', () => {
+            addMessage('Оформляю допсоглашение и начинаю работу', 'user');
+            setTimeout(() => {
+                addMessage('Подписали, можно работать', 'client');
+                setTimeout(() => {
+                    finishWithAnalysis(
+                        'Вы зафиксировали новые условия документально.\n\n' +
+                        'Почему это правильно:\n' +
+                        '• допсоглашение даёт юридическую защиту\n' +
+                        '• стоимость и сроки чётко зафиксированы\n' +
+                        '• клиент понимает ценность увеличенного объёма\n' +
+                        '• вы избегаете споров об оплате после выполнения работы',
+                        true
+                    );
+                }, 600);
+            }, 500);
+        });
+        createButton('Жду подписания, работу не начинаю', () => {
+            addMessage('Жду подписания, работу не начинаю', 'user');
+            setTimeout(() => {
+                addMessage('Ок, подпишем и потом начнем', 'client');
+                setTimeout(() => {
+                    finishWithAnalysis(
+                        'Тоже верное решение с юридической точки зрения, но с учётом срочности — менее гибкое.\n\n' +
+                        'Плюсы: вы защищены, работа начнётся только после подписания.\n' +
+                        'Минусы: при срочной проверке ожидание может затянуть процесс.\n\n' +
+                        'Оптимально: оформить допсоглашение и начать работу параллельно, но это рискованно. Ваша позиция безопасна, но менее оперативна.',
+                        true
+                    );
+                }, 500);
+            }, 500);
+        });
+        footnoteEl.innerHTML = 'Допсоглашение согласовано. Ваш ход?';
+    }
+
+    // --------------------------------------------------------------
+    // СБРОС
+    function fullReset() {
+        currentState = { locked: false };
+        messagesContainer.innerHTML = '';
+        clearAnalysis();
+        disableOptions(false);
+        startDialog();
+    }
+
+    function init() {
+        startDialog();
+        const resetBtn = document.getElementById('resetChatBtn');
+        if (resetBtn) resetBtn.addEventListener('click', fullReset);
+    }
+
+    init();
+</script>
+</body>
+</html>
