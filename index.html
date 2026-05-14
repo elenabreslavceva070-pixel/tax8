@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Тренажёр: Налоговая проверка | Мессенджер</title>
     <style>
         * {
@@ -12,236 +12,223 @@
         }
 
         body {
-            background: linear-gradient(145deg, #eef2f7 0%, #e0e7ef 100%);
+            background: #eef2f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-            padding: 20px;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            padding: 12px;
         }
 
         .messenger {
-            max-width: 750px;
+            max-width: 700px;
             width: 100%;
             background: #FFFFFF;
-            border-radius: 36px;
-            box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
             overflow: hidden;
         }
 
         .chat-header {
             background: #FFFFFF;
-            padding: 18px 24px 12px 24px;
-            border-bottom: 1.5px solid rgba(149, 202, 250, 0.6);
+            padding: 10px 16px 8px 16px;
+            border-bottom: 1px solid rgba(100, 160, 210, 0.4);
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
         }
         .avatar {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #95CAFA, #7eb5df);
-            border-radius: 32px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #95CAFA, #7bb5df);
+            border-radius: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 10px rgba(149, 202, 250, 0.3);
+            font-size: 1.4rem;
         }
         .chat-info h2 {
-            font-size: 1.28rem;
+            font-size: 1rem;
             font-weight: 600;
-            letter-spacing: -0.3px;
             color: #1a2c3e;
         }
         .chat-info h2 span {
             font-weight: 500;
             background: #ecf7ff;
-            padding: 2px 8px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            margin-left: 8px;
-            color: #2c6e9e;
+            padding: 1px 6px;
+            border-radius: 30px;
+            font-size: 0.6rem;
+            margin-left: 6px;
         }
         .chat-info p {
-            font-size: 0.8rem;
+            font-size: 0.68rem;
             color: #5e7a93;
-            margin-top: 4px;
+            margin-top: 2px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
         .online-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #2fc96b;
-            border-radius: 10px;
-            display: inline-block;
+            border-radius: 6px;
         }
 
         .messages-area {
             background: #FEFEFE;
-            padding: 22px 20px 12px 20px;
-            min-height: 460px;
-            max-height: 520px;
+            padding: 12px 14px 8px 14px;
+            min-height: 360px;
+            max-height: 420px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            scroll-behavior: smooth;
+            gap: 10px;
         }
 
         .message {
             display: flex;
-            max-width: 85%;
-            animation: fadeSlideUp 0.26s ease-out;
+            max-width: 88%;
         }
         .client-message { align-self: flex-start; }
         .client-message .bubble {
             background: #F1F5F9;
-            border-radius: 22px 22px 22px 8px;
-            border: 1px solid #e0ecf5;
+            border-radius: 16px 16px 16px 6px;
+            border: 1px solid #e2ecf5;
         }
         .user-message { align-self: flex-end; }
         .user-message .bubble {
-            background: #95CAFA18;
-            border-radius: 22px 22px 8px 22px;
-            border: 1px solid #95CAFA;
+            background: #ECF5FC;
+            border-radius: 16px 16px 6px 16px;
+            border: 1px solid #cde0ef;
         }
         .bubble {
-            padding: 12px 18px;
-            font-size: 0.95rem;
-            line-height: 1.45;
-            font-weight: 440;
-            word-break: break-word;
+            padding: 7px 12px;
+            font-size: 0.82rem;
+            line-height: 1.4;
             color: #1e2e3c;
         }
         .message-meta {
-            font-size: 0.68rem;
-            margin-top: 6px;
-            margin-left: 10px;
-            margin-right: 10px;
+            font-size: 0.6rem;
+            margin-top: 3px;
+            margin-left: 8px;
+            margin-right: 8px;
             color: #8da0b2;
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         .client-message .message-meta { justify-content: flex-start; }
         .user-message .message-meta { justify-content: flex-end; }
 
         .options-panel {
             background: #FFFFFF;
-            border-top: 1px solid rgba(149, 202, 250, 0.6);
-            padding: 20px 20px 16px;
+            border-top: 1px solid #e9eff5;
+            padding: 10px 14px 10px;
         }
         .options-title {
-            font-size: 0.82rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.6px;
             font-weight: 600;
             color: #5e7a93;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-        .options-title::before { content: "⚡"; font-size: 14px; }
-        .options-grid { display: flex; flex-direction: column; gap: 12px; }
+        .options-title::before { content: "⚡"; font-size: 11px; }
+        .options-grid { display: flex; flex-direction: column; gap: 7px; }
         .option-btn {
             width: 100%;
             background: transparent;
-            border: 1.8px solid #95CAFA;
-            border-radius: 26px;
-            padding: 13px 18px;
-            font-family: 'Segoe UI', 'Inter', sans-serif;
-            font-size: 0.93rem;
+            border: 1.5px solid #cde2f5;
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-family: inherit;
+            font-size: 0.78rem;
             font-weight: 500;
             text-align: left;
             color: #1e2f3e;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             background: #FFFFFF;
-            line-height: 1.35;
+            line-height: 1.3;
         }
         .option-btn:hover {
             background: #F4FAFF;
-            border-color: #7bb9e6;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(149, 202, 250, 0.2);
+            border-color: #9bc6ec;
         }
         .options-disabled .option-btn {
-            opacity: 0.6;
+            opacity: 0.55;
             cursor: default;
             pointer-events: none;
         }
 
         .analysis-card {
-            margin: 12px 20px 20px 20px;
-            border-radius: 20px;
-            padding: 14px 18px;
-            font-size: 0.88rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin: 6px 14px 12px 14px;
+            border-radius: 14px;
+            padding: 8px 12px;
+            font-size: 0.74rem;
+            line-height: 1.4;
         }
         .analysis-card.correct {
-            background-color: #e9f7ef;
-            border-left: 6px solid #2c9b5e;
+            background-color: #e8f5e9;
+            border-left: 4px solid #2c9b5e;
             color: #155724;
         }
         .analysis-card.wrong {
-            background-color: #ffe6e6;
-            border-left: 6px solid #dc3545;
-            color: #9b2c2c;
+            background-color: #ffeaea;
+            border-left: 4px solid #dc3545;
+            color: #8b2c2c;
         }
         .analysis-card ul {
-            margin: 8px 0 4px 20px;
-            padding-left: 0;
+            margin: 4px 0 2px 18px;
         }
         .analysis-card li {
-            margin: 4px 0;
+            margin: 2px 0;
         }
         .feedback-footnote {
-            margin-top: 8px;
-            font-size: 0.72rem;
+            margin-top: 6px;
+            font-size: 0.65rem;
             text-align: center;
             color: #9ab3cc;
-            border-top: 1px dashed #e2edf7;
-            padding-top: 12px;
+            border-top: 1px solid #ecf3f9;
+            padding-top: 7px;
         }
         .reset-button-container {
-            padding: 8px 20px 22px 20px;
+            padding: 8px 14px 12px 14px;
             background: #FFFFFF;
             border-top: 1px solid #ecf3f9;
             text-align: center;
         }
         .reset-chat {
             background: #f8fafd;
-            border: 1.2px solid #95CAFA;
-            border-radius: 44px;
-            padding: 10px 20px;
-            font-size: 0.85rem;
+            border: 1px solid #cde2f5;
+            border-radius: 32px;
+            padding: 5px 14px;
+            font-size: 0.73rem;
             font-weight: 500;
             font-family: inherit;
             color: #22668d;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .reset-chat:hover {
             background: #eef5fc;
-            transform: scale(0.98);
         }
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .messages-area::-webkit-scrollbar { width: 5px; }
-        .messages-area::-webkit-scrollbar-track { background: #ECF3F9; border-radius: 10px; }
-        .messages-area::-webkit-scrollbar-thumb { background: #95CAFA; border-radius: 10px; }
-        @media (max-width: 560px) {
-            .message { max-width: 92%; }
-            .option-btn { padding: 11px 14px; font-size: 0.86rem; }
+        .messages-area::-webkit-scrollbar { width: 4px; }
+        .messages-area::-webkit-scrollbar-track { background: #ECF3F9; border-radius: 6px; }
+        .messages-area::-webkit-scrollbar-thumb { background: #95CAFA; border-radius: 6px; }
+
+        @media (max-width: 500px) {
+            .message { max-width: 94%; }
+            .option-btn { padding: 5px 10px; font-size: 0.73rem; }
+            .bubble { font-size: 0.76rem; padding: 6px 10px; }
+            .messages-area { padding: 10px 12px; }
         }
     </style>
 </head>
@@ -271,7 +258,7 @@
 </div>
 
 <script>
-    // ----- ТРЕНАЖЕР ПО СЦЕНАРИЮ (МИХАИЛ АЛЕКСЕЕВИЧ) -----
+    // ----- ТРЕНАЖЕР ПО СЦЕНАРИЮ (АЛЕКСЕЙ МИХАЙЛОВИЧ) -----
     const messagesContainer = document.getElementById('messagesArea');
     const optionsContainerDiv = document.getElementById('optionsContainer');
     const optionsPanel = document.getElementById('optionsPanel');
@@ -294,7 +281,7 @@
         metaSpan.className = 'message-meta';
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        if (sender === 'client') metaSpan.innerText = `Михаил Алексеевич · ${timeStr}`;
+        if (sender === 'client') metaSpan.innerText = `Алексей Михайлович · ${timeStr}`;
         else metaSpan.innerText = `Вы · ${timeStr}`;
         messageDiv.appendChild(bubble);
         messageDiv.appendChild(metaSpan);
@@ -316,20 +303,11 @@
             let html = '';
             for (let line of lines) {
                 if (line.trim().startsWith('•')) {
-                    if (!inList) {
-                        html += '<ul>';
-                        inList = true;
-                    }
-                    const itemText = line.trim().substring(1).trim();
-                    html += `<li>${itemText}</li>`;
+                    if (!inList) { html += '<ul>'; inList = true; }
+                    html += `<li>${line.trim().substring(1).trim()}</li>`;
                 } else {
-                    if (inList) {
-                        html += '</ul>';
-                        inList = false;
-                    }
-                    if (line.trim()) {
-                        html += `<p style="margin: 8px 0 0 0;">${line}</p>`;
-                    }
+                    if (inList) { html += '</ul>'; inList = false; }
+                    if (line.trim()) html += `<p style="margin:4px 0 0 0;">${line}</p>`;
                 }
             }
             if (inList) html += '</ul>';
@@ -342,11 +320,10 @@
         analysisDiv.innerHTML = '';
         const card = document.createElement('div');
         card.className = `analysis-card ${type === 'correct' ? 'correct' : 'wrong'}`;
-        const formattedText = formatListText(text);
         if (type === 'correct') {
-            card.innerHTML = `<strong>✅ Верное решение</strong><br>${formattedText}`;
+            card.innerHTML = `<strong>✅ Верное решение</strong><br>${formatListText(text)}`;
         } else {
-            card.innerHTML = `<strong>⚠️ Разбор ошибки</strong><br>${formattedText}`;
+            card.innerHTML = `<strong>⚠️ Разбор ошибки</strong><br>${formatListText(text)}`;
         }
         analysisDiv.appendChild(card);
         scrollToBottom();
@@ -402,8 +379,8 @@
             addMessage('Нужно быстро. Все очень срочно', 'client');
             setTimeout(() => {
                 showChoice2A();
-            }, 600);
-        }, 500);
+            }, 500);
+        }, 400);
     }
 
     function showChoice2A() {
@@ -429,10 +406,10 @@
                     addMessage('Я не согласен доплачивать. Давайте по общим расценкам.', 'client');
                     setTimeout(() => {
                         showChoice3A1();
-                    }, 700);
-                }, 600);
-            }, 600);
-        }, 500);
+                    }, 600);
+                }, 500);
+            }, 500);
+        }, 400);
     }
 
     function showChoice3A1() {
@@ -444,7 +421,7 @@
                     'Вы согласились работать в убыток:\n\n• работу выполнили без компенсации переработок\n• клиент закрепляет модель «можно нагружать без доплат»\n• снизили ценность ваших услуг\n• повысили риск профессионального выгорания и финансовых потерь',
                     false
                 );
-            }, 500);
+            }, 400);
         });
         createButton('Я отказываюсь от работы с вами.', () => {
             addMessage('Я отказываюсь от работы с вами.', 'user');
@@ -453,7 +430,7 @@
                     'Ошибка: Вы отказались от клиента вместо того, чтобы попробовать договориться.\n\n• потеря клиента и репутационные риски\n• упущена возможность пересмотра условий\n• можно было предложить компромисс: частичная доплата или поэтапная работа',
                     false
                 );
-            }, 500);
+            }, 400);
         });
         footnoteEl.innerHTML = 'Клиент отказывается от доплаты. Ваш ход?';
     }
@@ -464,8 +441,8 @@
             addMessage('Документы пришлю позже, но работать нужно уже сейчас', 'client');
             setTimeout(() => {
                 showChoice4A2();
-            }, 600);
-        }, 500);
+            }, 500);
+        }, 400);
     }
 
     function showChoice4A2() {
@@ -479,8 +456,8 @@
                         'Вы согласились начать работу без ознакомления с документами и без оценки объема.\n\n• вы не знали реальный объем задач\n• отсутствует возможность обосновать увеличение стоимости\n• клиент получил работу без доплат, хотя объем мог быть больше\n• риск переработок и убытков для вас',
                         false
                     );
-                }, 600);
-            }, 500);
+                }, 500);
+            }, 400);
         });
         createButton('Жду документы, без них не работаю', () => {
             addMessage('Жду документы, без них не работаю', 'user');
@@ -492,7 +469,7 @@
                         true
                     );
                 }, 500);
-            }, 500);
+            }, 400);
         });
         footnoteEl.innerHTML = 'Клиент хочет начать без документов. Ваш ответ?';
     }
@@ -504,8 +481,8 @@
             addMessage('Хорошо, отправляю документы', 'client');
             setTimeout(() => {
                 showChoice2B();
-            }, 600);
-        }, 500);
+            }, 500);
+        }, 400);
     }
 
     function showChoice2B() {
@@ -531,8 +508,8 @@
             addMessage('Понимаю, но нам срочно. Давайте работать, оплату обсудим позже', 'client');
             setTimeout(() => {
                 showChoice3B();
-            }, 600);
-        }, 500);
+            }, 500);
+        }, 400);
     }
 
     function showChoice3B() {
@@ -547,7 +524,7 @@
                         false
                     );
                 }, 600);
-            }, 500);
+            }, 400);
         });
         createButton('Без допсоглашения не начну', () => {
             addMessage('Без допсоглашения не начну', 'user');
@@ -555,8 +532,8 @@
                 addMessage('Хорошо, тогда оформим допсоглашение', 'client');
                 setTimeout(() => {
                     showChoice4B();
-                }, 600);
-            }, 500);
+                }, 500);
+            }, 400);
         });
         footnoteEl.innerHTML = 'Клиент просит начать без документального согласования. Ваш ответ?';
     }
@@ -572,8 +549,8 @@
                         'Вы зафиксировали новые условия документально:\n\n• вы юридически защищены\n• клиент понимает ценность увеличенного объема\n• вы избегаете споров об оплате после выполнения работы',
                         true
                     );
-                }, 600);
-            }, 500);
+                }, 500);
+            }, 400);
         });
         createButton('Жду подписания, работу не начинаю', () => {
             addMessage('Жду подписания, работу не начинаю', 'user');
@@ -585,7 +562,7 @@
                         true
                     );
                 }, 500);
-            }, 500);
+            }, 400);
         });
         footnoteEl.innerHTML = 'Допсоглашение согласовано. Ваш ход?';
     }
